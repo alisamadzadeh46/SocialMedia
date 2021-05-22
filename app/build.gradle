@@ -88,7 +88,7 @@ dependencies {
     //Dagger - Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
-    
+
     // Firebase Firestore
     def fire_store = "23.0.0"
     implementation "com.google.firebase:firebase-firestore:$fire_store"
@@ -108,4 +108,8 @@ dependencies {
     // Firebase Auth
     def auth = "21.0.1"
     implementation 'com.google.firebase:firebase-auth:21.0.1'
+
+    //SnackBar
+    def sneaker = '2.0.0'
+    implementation "com.irozon.sneaker:sneaker:$sneaker"
 }
