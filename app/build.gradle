@@ -1,6 +1,10 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -43,6 +47,66 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     //drawer layout
-    def drawer_layout ="1.1.1"
+    def drawer_layout = "1.1.1"
     implementation "androidx.drawerlayout:drawerlayout:$drawer_layout"
+
+    // ViewModel
+    def lifecycle_version = "2.3.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+
+    // Lifecycle
+    def lifecycle_extensions = "2.2.0"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_extensions"
+    def lifecycle_livedata = "2.3.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_livedata"
+    def lifecycle_runtime = "2.3.1"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_runtime"
+
+    // Coroutines
+    def coroutines = "1.5.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines"
+
+
+    // Navigation Component
+    def navigation = "2.3.5"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation"
+
+    // Glide
+    def glide = "4.12.0"
+    implementation "com.github.bumptech.glide:glide:$glide"
+    kapt "com.github.bumptech.glide:compiler:$glide"
+
+    // Activity KTX for viewModels()
+    def activity = "1.2.3"
+    implementation "androidx.activity:activity-ktx:$activity"
+
+    //Dagger - Hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    // Firebase Auth
+    def auth = "21.0.1"
+    implementation "com.google.firebase:firebase-auth-ktx:$auth"
+
+    // Firebase Firestore
+    def fire_store = "23.0.0"
+    implementation "com.google.firebase:firebase-firestore:$fire_store"
+
+    // Firebase Storage KTX
+    def storage_ktx = "20.0.0"
+    implementation "com.google.firebase:firebase-storage-ktx:$storage_ktx"
+
+    // Firebase Coroutines
+    def play_services = "1.1.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$play_services"
+
+    // Circular Image View
+    def circle_imageview = "3.1.0"
+    implementation "de.hdodenhof:circleimageview:$circle_imageview"
+
+    // Android Image Cropper
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 }
