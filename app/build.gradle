@@ -108,8 +108,4 @@ dependencies {
     // Firebase Auth
     def auth = "21.0.1"
     implementation 'com.google.firebase:firebase-auth:21.0.1'
-
-    //SnackBar
-    def sneaker = '2.0.0'
-    implementation "com.irozon.sneaker:sneaker:$sneaker"
 }
