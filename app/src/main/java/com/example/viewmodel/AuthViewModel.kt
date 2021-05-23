@@ -1,13 +1,12 @@
 package com.example.viewmodel
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.repositories.AuthRepository
+import com.example.repositories.impl.AuthImpl
 import com.example.socialmedia.R
 import com.example.utils.Constants.MAX_USERNAME_LENGTH
 import com.example.utils.Constants.MIN_PASSWORD_LENGTH
@@ -24,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val repository: AuthRepository,
+    private val authImpl: AuthImpl,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
 
 ) : ViewModel() {
@@ -57,7 +56,7 @@ class AuthViewModel @Inject constructor(
         }
         _registerStatus.postValue(Event(Resource.Loading()))
         viewModelScope.launch (dispatcher){
-            val result = repository.register(email, username, password)
+            val result = authImpl.register(email, username, password)
             _registerStatus.postValue(Event(result))
         }
     }

@@ -8,8 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.socialmedia.R
+import com.example.ui.snackBar
+import com.example.utils.EventObserver
 import com.example.utils.Resource
 import com.example.viewmodel.AuthViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_register.*
 
@@ -46,12 +49,12 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         authViewModel.registerStatus.observe(viewLifecycleOwner, EventObserver(
             onError = {
                 registerProgressBar.isVisible = false
-                snackbar(it)
+                snackBar(it)
             },
             onLoading = { registerProgressBar.isVisible = true }
         ) {
             registerProgressBar.isVisible = false
-            snackbar(getString(R.string.success_registration))
+            snackBar(getString(R.string.success_registration))
         })
     }
 
