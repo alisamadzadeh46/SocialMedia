@@ -9,4 +9,10 @@
     <string name="register">Register</string>
     <string name="username">username</string>
     <string name="repeat_password">repeat password</string>
+    <string name="error_input_empty">The fields must not be empty</string>
+    <string name="error_incorrectly_repeated_password">The passwords do not match</string>
+    <string name="error_username_too_short">The username can\'t have less than %d characters</string>
+    <string name="error_username_too_long">The username can\'t have more than %d characters</string>
+    <string name="error_password_too_short">The password must be at least %d digits long</string>
+    <string name="error_not_a_valid_email">Please enter a valid E-Mail</string>
 </resources>
