@@ -15,11 +15,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         register.setOnClickListener {
             if (findNavController().previousBackStackEntry != null) {
                 findNavController().popBackStack()
-            } else {
+            } else
                 findNavController().navigate(
                     LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
                 )
-            }
+
 
         }
     }
