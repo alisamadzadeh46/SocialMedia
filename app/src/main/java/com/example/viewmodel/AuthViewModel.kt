@@ -34,7 +34,7 @@ class AuthViewModel @Inject constructor(
     val loginStatus: LiveData<Event<Resource<AuthResult>>> = _loginStatus
 
     fun login(
-        @ApplicationContext applicationContext: Context,
+        applicationContext: Context,
         email: String, password: String
     ) {
         if (email.isEmpty() || password.isEmpty()) {
@@ -50,7 +50,7 @@ class AuthViewModel @Inject constructor(
     }
 
     fun register(
-        @ApplicationContext applicationContext: Context,
+        applicationContext: Context,
         email: String,
         username: String,
         password: String,
