@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.repositories.CreatePostRepository
+import com.example.repositories.impl.CreatePostImpl
 import com.example.socialmedia.R
 import com.example.utils.Event
 import com.example.utils.Resource
@@ -18,11 +18,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreatePostViewModel @Inject constructor(
-    private val createPostRepository: CreatePostRepository,
+    private val createPostImpl: CreatePostImpl,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : ViewModel() {
+
     private val _createPostStatus = MutableLiveData<Event<Resource<Any>>>()
     val createPostStatus: LiveData<Event<Resource<Any>>> = _createPostStatus
+
+    private val _curImageUri = MutableLiveData<Uri>()
+    val curImageUri: LiveData<Uri> = _curImageUri
+
+    fun setCurImageUri(uri: Uri) {
+        _curImageUri.postValue(uri)
+    }
 
     fun createPost(
         applicationContext: Context,
@@ -34,7 +42,7 @@ class CreatePostViewModel @Inject constructor(
         } else {
             _createPostStatus.postValue(Event(Resource.Loading()))
             viewModelScope.launch(dispatcher) {
-                val result = createPostRepository.createPost(imageUri, text)
+                val result = createPostImpl.createPost(imageUri, text)
                 _createPostStatus.postValue(Event(result))
             }
         }

@@ -42,6 +42,4 @@ class CreatePostImpl : CreatePostRepository {
             Resource.Success(Any())
         }
     }
-
-
 }

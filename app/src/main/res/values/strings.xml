@@ -24,4 +24,5 @@
     <string name="choose_image">choose image</string>
     <string name="description">description</string>
     <string name="post">post</string>
+    <string name="error_no_image_chosen">Please choose an image for the post</string>
 </resources>
