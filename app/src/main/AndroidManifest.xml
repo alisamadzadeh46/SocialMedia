@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SocialMedia">
-        <activity android:name=".AuthActivity">
+        <activity android:name="com.example.ui.activity.MainActivity"/>
+        <activity android:name="com.example.ui.activity.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
