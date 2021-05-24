@@ -16,4 +16,8 @@
     <string name="error_password_too_short">The password must be at least %d digits long</string>
     <string name="error_not_a_valid_email">Please enter a valid E-Mail</string>
     <string name="success_registration">Successfully registered account</string>
+    <string name="home">home</string>
+    <string name="search">search</string>
+    <string name="profile">profile</string>
+    <string name="settings">settings</string>
 </resources>
