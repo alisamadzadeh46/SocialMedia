@@ -21,4 +21,7 @@
     <string name="profile">profile</string>
     <string name="settings">settings</string>
     <string name="logout">logout</string>
+    <string name="choose_image">choose image</string>
+    <string name="description">description</string>
+    <string name="post">post</string>
 </resources>
