@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
 import com.canhub.cropper.CropImage
 import com.canhub.cropper.CropImageView
+import com.example.ui.slideUpViews
 import com.example.utils.EventObserver
 import com.example.viewmodel.CreatePostViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +27,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
     private val createPostViewModel: CreatePostViewModel by viewModels()
+
     @Inject
     lateinit var glide: RequestManager
     private var curImageUri: Uri? = null
@@ -42,6 +44,7 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
             return CropImage.getActivityResult(intent)?.uriContent
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         cropContent = registerForActivityResult(cropActivityResultContract) {
@@ -62,9 +65,14 @@ class CreatePostFragment : Fragment(R.layout.fragment_create_post) {
         }
         btnPost.setOnClickListener {
             curImageUri?.let { uri ->
-                createPostViewModel.createPost(requireContext(),uri, description_text.text.toString())
+                createPostViewModel.createPost(
+                    requireContext(),
+                    uri,
+                    description_text.text.toString()
+                )
             } ?: snackBar(getString(R.string.error_no_image_chosen))
         }
+        slideUpViews(requireContext(), image, select_image, description, btnPost)
     }
 
     private fun subscribeToObservers() {
