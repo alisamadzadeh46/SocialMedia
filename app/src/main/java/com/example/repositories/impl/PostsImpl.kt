@@ -83,5 +83,9 @@ class PostsImpl : PostsRepository {
         }
     }
 
+    override suspend fun users(uid: List<String>): Resource<List<User>> {
+        TODO("Not yet implemented")
+    }
+
 
 }
