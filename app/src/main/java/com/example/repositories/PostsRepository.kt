@@ -5,6 +5,7 @@ import com.example.data.entities.User
 import com.example.utils.Resource
 
 interface PostsRepository {
-    suspend fun post():Resource<List<Post>>
+    suspend fun post(): Resource<List<Post>>
     suspend fun user(uid: String): Resource<User>
+    suspend fun toggleLikeForPost(post: Post): Resource<Boolean>
 }
