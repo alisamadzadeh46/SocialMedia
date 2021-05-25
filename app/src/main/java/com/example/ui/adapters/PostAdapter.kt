@@ -92,7 +92,8 @@ class PostAdapter @Inject constructor(
                 }
                 like.setOnClickListener {
                     onLikeClickListener?.let { click ->
-                        click(post, layoutPosition)
+                        if (!post.isLiking) click(post, layoutPosition)
+
                     }
                 }
                 comment.setOnClickListener {
