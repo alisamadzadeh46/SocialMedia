@@ -10,4 +10,6 @@ interface PostsRepository {
     suspend fun toggleLikeForPost(post: Post): Resource<Boolean>
     suspend fun deletePost(post: Post): Resource<Post>
     suspend fun users(uid: List<String>): Resource<List<User>>
+    suspend fun profilePosts(uid: String): Resource<List<Post>>
+    suspend fun toggleFollowForUser(uid: String): Resource<Boolean>
 }

@@ -23,6 +23,7 @@ class PostsImpl : PostsRepository {
     private val users = store.collection("users")
     private val posts = store.collection("posts")
     private val storage = Firebase.storage
+    private val auth = FirebaseAuth.getInstance()
     override suspend fun post() = withContext(Dispatchers.IO) {
         safeCall {
             val uid = FirebaseAuth.getInstance().uid!!
@@ -88,5 +89,41 @@ class PostsImpl : PostsRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun profilePosts(uid: String) = withContext(Dispatchers.IO) {
+        safeCall {
+            val profilePost = posts.whereEqualTo("authorUid", uid)
+                .orderBy("data", Query.Direction.DESCENDING)
+                .get()
+                .await()
+                .toObjects(Post::class.java)
+                .onEach { post ->
+                    val user = user(post.authorUid).data!!
+                    post.authorProfilePictureUrl = user.profilePictureUrl
+                    post.authorUsername = user.username
+                    post.isLiked = uid in post.likedBy
 
+                }
+            Resource.Success(profilePost)
+        }
+    }
+
+
+
+    override suspend fun toggleFollowForUser(uid: String) = withContext(Dispatchers.IO) {
+        safeCall {
+            var isFollowing = false
+            store.runTransaction {
+                val currentUid = auth.uid!!
+                val currentUser = it.get(users.document(currentUid)).toObject(User::class.java)!!
+                isFollowing = uid in currentUser.follows
+                val newFollows =
+                    if (isFollowing) currentUser.follows - uid else currentUser.follows + uid
+                it.update(users.document(currentUid), "follows", newFollows)
+            }.await()
+            Resource.Success(!isFollowing)
+
+        }
+
+
+    }
 }
