@@ -7,4 +7,5 @@ import com.example.utils.Resource
 interface ProfileRepository {
     suspend fun profilePosts(uid: String): Resource<List<Post>>
     suspend fun user(uid: String): Resource<User>
+    suspend fun toggleFollowForUser(uid: String): Resource<Boolean>
 }

@@ -66,8 +66,9 @@ class PostsImpl : PostsRepository {
                 it.update(
                     posts.document(post.id), "likedBy",
                     if (uid in currentLikes) currentLikes - uid else {
-                        currentLikes + uid
                         isLiked = true
+                        currentLikes + uid
+
                     }
                 )
             }.await()

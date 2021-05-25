@@ -19,6 +19,7 @@ class ProfileImpl : ProfileRepository {
     private val store = FirebaseFirestore.getInstance()
     private val users = store.collection("users")
     private val posts = store.collection("posts")
+    private val auth = FirebaseAuth.getInstance()
     override suspend fun profilePosts(uid: String) = withContext(Dispatchers.IO) {
         safeCall {
             val profilePost = posts.whereEqualTo("authorUid", uid)
@@ -36,6 +37,7 @@ class ProfileImpl : ProfileRepository {
             Resource.Success(profilePost)
         }
     }
+
     override suspend fun user(uid: String) = withContext(Dispatchers.IO) {
         safeCall {
             val user = users.document(uid).get().await().toObject(User::class.java)
@@ -49,5 +51,21 @@ class ProfileImpl : ProfileRepository {
         }
     }
 
+    override suspend fun toggleFollowForUser(uid: String) = withContext(Dispatchers.IO) {
+        safeCall {
+            var isFollowing = false
+            store.runTransaction {
+                val currentUid = auth.uid!!
+                val currentUser = it.get(users.document(currentUid)).toObject(User::class.java)!!
+                isFollowing = uid in currentUser.follows
+                val newFollows =
+                    if (isFollowing) currentUser.follows - uid else currentUser.follows + uid
+                it.update(users.document(currentUid), "follows", newFollows)
+            }.await()
+            Resource.Success(!isFollowing)
 
+        }
+
+
+    }
 }
