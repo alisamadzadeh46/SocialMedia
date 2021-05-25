@@ -9,6 +9,8 @@ import com.example.utils.safeCall
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -20,6 +22,7 @@ class PostsImpl : PostsRepository {
     private val store = FirebaseFirestore.getInstance()
     private val users = store.collection("users")
     private val posts = store.collection("posts")
+    private val storage = Firebase.storage
     override suspend fun post() = withContext(Dispatchers.IO) {
         safeCall {
             val uid = FirebaseAuth.getInstance().uid!!
@@ -64,11 +67,19 @@ class PostsImpl : PostsRepository {
                     posts.document(post.id), "likedBy",
                     if (uid in currentLikes) currentLikes - uid else {
                         currentLikes + uid
-                        isLiked=true
+                        isLiked = true
                     }
                 )
             }.await()
             Resource.Success(isLiked)
+        }
+    }
+
+    override suspend fun deletePost(post: Post) = withContext(Dispatchers.IO) {
+        safeCall {
+            posts.document(post.id).delete().await()
+            storage.getReferenceFromUrl(post.imageUrl).delete().await()
+            Resource.Success(post)
         }
     }
 
