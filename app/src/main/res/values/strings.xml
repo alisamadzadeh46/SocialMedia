@@ -25,4 +25,6 @@
     <string name="description">description</string>
     <string name="post">post</string>
     <string name="error_no_image_chosen">Please choose an image for the post</string>
+    <string name="alisamadzadeh">alisamadzadeh</string>
+    <string name="liked_by_ali_and_50_others">Liked by ali and 50 others</string>
 </resources>
