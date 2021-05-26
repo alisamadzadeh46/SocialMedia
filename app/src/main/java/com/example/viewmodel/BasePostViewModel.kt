@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.entities.Post
 import com.example.data.entities.User
-import com.example.repositories.PostsRepository
+import com.example.repositories.impl.PostsImpl
 import com.example.utils.Event
 import com.example.utils.Resource
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 
 abstract class BasePostViewModel(
-    private val repository: PostsRepository,
+    private val repository: PostsImpl,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : ViewModel() {
 

@@ -1,7 +1,7 @@
 package com.example.repositories.impl
 
 
-import android.util.Log
+
 import com.example.data.entities.Post
 import com.example.data.entities.User
 import com.example.repositories.PostsRepository
@@ -92,8 +92,8 @@ class PostsImpl : PostsRepository {
 
     override suspend fun profilePosts(uid: String) = withContext(Dispatchers.IO) {
         safeCall {
-            val profilePost = posts.whereEqualTo("authorUid", uid)
-                .orderBy("data", Query.Direction.DESCENDING)
+            val profilePosts = posts.whereEqualTo("authorUid", uid)
+                .orderBy("date", Query.Direction.DESCENDING)
                 .get()
                 .await()
                 .toObjects(Post::class.java)
@@ -102,14 +102,9 @@ class PostsImpl : PostsRepository {
                     post.authorProfilePictureUrl = user.profilePictureUrl
                     post.authorUsername = user.username
                     post.isLiked = uid in post.likedBy
-
                 }
-            Log.i("TGG", uid)
-            Resource.Success(profilePost)
-
-
+            Resource.Success(profilePosts)
         }
-
     }
 
 

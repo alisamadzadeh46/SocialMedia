@@ -1,8 +1,10 @@
 package com.example.ui.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -122,9 +124,11 @@ class PostAdapter @Inject constructor(
         }
     }
     private val differ = AsyncListDiffer(this, diffCallback)
+
     var posts: List<Post>
         get() = differ.currentList
         set(value) = differ.submitList(value)
+
     private var onLikeClickListener: ((Post, Int) -> Unit)? = null
     private var onUserClickListener: ((String) -> Unit)? = null
     private var onDeletePostClickListener: ((Post) -> Unit)? = null
