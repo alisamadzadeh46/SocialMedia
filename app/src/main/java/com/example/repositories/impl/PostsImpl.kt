@@ -1,7 +1,7 @@
 package com.example.repositories.impl
 
 
-
+import android.util.Log
 import com.example.data.entities.Post
 import com.example.data.entities.User
 import com.example.repositories.PostsRepository
@@ -30,7 +30,7 @@ class PostsImpl : PostsRepository {
             val uid = auth.uid!!
             val follows = user(uid).data!!.follows
             val allPosts = posts.whereIn("authorUid", follows)
-                .orderBy("data", Query.Direction.DESCENDING)
+                .orderBy("date", Query.Direction.DESCENDING)
                 .get()
                 .await()
                 .toObjects(Post::class.java)
@@ -86,9 +86,14 @@ class PostsImpl : PostsRepository {
         }
     }
 
-    override suspend fun users(uid: List<String>): Resource<List<User>> {
-        TODO("Not yet implemented")
+    override suspend fun users(uid: List<String>) = withContext(Dispatchers.IO) {
+        safeCall {
+            val usersList = users.whereIn("uid", uid).orderBy("username").get().await()
+                .toObjects(User::class.java)
+            Resource.Success(usersList)
+        }
     }
+
 
     override suspend fun profilePosts(uid: String) = withContext(Dispatchers.IO) {
         safeCall {
@@ -106,7 +111,6 @@ class PostsImpl : PostsRepository {
             Resource.Success(profilePosts)
         }
     }
-
 
 
     override suspend fun toggleFollowForUser(uid: String) = withContext(Dispatchers.IO) {

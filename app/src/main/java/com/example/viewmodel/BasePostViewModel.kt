@@ -34,6 +34,7 @@ abstract class BasePostViewModel(
     abstract fun getPosts(uid: String = "")
 
     fun users(uid: List<String>) {
+        if (uid.isEmpty()) return
         _likedByUsers.postValue(Event(Resource.Loading()))
         viewModelScope.launch(dispatcher) {
             val result = repository.users(uid)
