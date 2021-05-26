@@ -18,7 +18,7 @@ class PostAdapter @Inject constructor(
     private val glide: RequestManager
 ) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostAdapter.PostViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         return PostViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.item_post,
@@ -28,7 +28,7 @@ class PostAdapter @Inject constructor(
         )
     }
 
-    override fun onBindViewHolder(holder: PostAdapter.PostViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = posts[position]
         holder.bind(
             post,

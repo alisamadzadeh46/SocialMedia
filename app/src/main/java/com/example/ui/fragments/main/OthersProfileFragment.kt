@@ -20,7 +20,7 @@ class OthersProfileFragment : ProfileFragment() {
     private val args: OthersProfileFragmentArgs by navArgs()
 
     override val uid: String
-        get() = super.uid
+        get() = args.uid
 
     private var curUser: User? = null
 
