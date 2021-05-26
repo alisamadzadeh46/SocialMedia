@@ -8,7 +8,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.RequestManager
 import com.example.ui.adapters.PostAdapter
+import com.example.ui.adapters.SearchAdapter
 import com.example.ui.dialogs.DeletePostDialog
+import com.example.ui.dialogs.LikedByDialog
 import com.example.ui.snackBar
 import com.example.utils.EventObserver
 import com.example.viewmodel.BasePostViewModel
@@ -42,9 +44,20 @@ abstract class BasePostFragment(
                 }
             }.show(childFragmentManager, null)
         }
+        postAdapter.setOnLikedByClickListener { post->
+            basePostViewModel.users(post.likedBy)
+
+        }
     }
 
     private fun subscribeToObservers() {
+        basePostViewModel.likedByUsers.observe(viewLifecycleOwner, EventObserver(
+            onError = { snackBar(it) }
+        ) { users ->
+            val searchAdapter = SearchAdapter(glide)
+            searchAdapter.users = users
+            LikedByDialog(searchAdapter).show(childFragmentManager, null)
+        })
         basePostViewModel.deletePostStatus.observe(viewLifecycleOwner, EventObserver(
             onError = { snackBar(it) }
         ) { deletedPost ->
@@ -81,6 +94,7 @@ abstract class BasePostFragment(
                 val uid = FirebaseAuth.getInstance().uid!!
                 postAdapter.posts[it].apply {
                     this.isLiked = isLiked
+                    isLiking = false
                     if (isLiked) {
                         likedBy += uid
                     } else {

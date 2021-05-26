@@ -35,4 +35,5 @@
     <string name="posts">posts</string>
     <string name="no_description">No Description</string>
     <string name="unfollow">Unfollow</string>
+    <string name="liked_by_dialog_title">Liked by</string>
 </resources>
