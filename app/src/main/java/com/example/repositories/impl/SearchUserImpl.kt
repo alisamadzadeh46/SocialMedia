@@ -17,7 +17,9 @@ class SearchUserImpl : SearchUserRepository {
     private val users = store.collection("users")
     override suspend fun search(query: String) = withContext(Dispatchers.IO) {
         safeCall {
-            val userResult = users.whereGreaterThanOrEqualTo("username",query.toUpperCase(Locale.ROOT))
+            val userResult = users.whereGreaterThanOrEqualTo("username",
+                query.uppercase(Locale.ROOT)
+            )
                 .get().await().toObjects(User::class.java)
             Resource.Success(userResult)
         }

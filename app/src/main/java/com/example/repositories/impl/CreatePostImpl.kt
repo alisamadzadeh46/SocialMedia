@@ -17,7 +17,6 @@ import java.util.*
 
 @ActivityScoped
 class CreatePostImpl : CreatePostRepository {
-
     private val auth = FirebaseAuth.getInstance()
     private val store = FirebaseFirestore.getInstance()
     private val storage = Firebase.storage

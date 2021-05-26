@@ -1,6 +1,9 @@
 package com.example.di
 
 import com.example.repositories.impl.CreatePostImpl
+import com.example.repositories.impl.PostsImpl
+import com.example.repositories.impl.SearchUserImpl
+import com.example.repositories.impl.UsersImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,5 +18,24 @@ object MainModule {
     @ViewModelScoped //  this is new , old version hilt :@ActivityScoped
     fun provideCreatePostRepository(): CreatePostImpl {
         return CreatePostImpl()
+    }
+
+
+    @Provides
+    @ViewModelScoped
+    fun providePostRepository(): PostsImpl {
+        return PostsImpl()
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideSearchUserRepository(): SearchUserImpl {
+        return SearchUserImpl()
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideUserRepository(): UsersImpl {
+        return UsersImpl()
     }
 }
