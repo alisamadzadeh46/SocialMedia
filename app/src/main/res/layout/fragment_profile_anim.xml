@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:layout_constraintEnd_toEndOf="parent"
     android:layoutDirection="ltr"
+    android:id="@+id/profile"
     app:layout_constraintHorizontal_bias="0.5"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"

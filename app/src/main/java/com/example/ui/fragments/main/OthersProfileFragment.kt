@@ -2,8 +2,8 @@ package com.example.ui.fragments.main
 
 import android.graphics.Color
 import android.os.Bundle
-import android.transition.ChangeBounds
-import android.transition.TransitionManager
+import androidx.transition.ChangeBounds
+import androidx.transition.TransitionManager
 import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.constraintlayout.widget.ConstraintSet
@@ -55,7 +55,10 @@ class OthersProfileFragment : ProfileFragment() {
             val set2 = ConstraintSet()
             set1.clone(requireContext(), R.layout.fragment_profile)
             set2.clone(requireContext(), R.layout.fragment_profile_anim)
-            TransitionManager.beginDelayedTransition(profile, changeBounds)
+            TransitionManager.beginDelayedTransition(
+                profile,
+                changeBounds
+            )
             if (user.isFollowing) {
                 text = requireContext().getString(R.string.unfollow)
                 setBackgroundColor(Color.RED)
@@ -64,7 +67,7 @@ class OthersProfileFragment : ProfileFragment() {
             } else {
                 text = requireContext().getString(R.string.follow)
                 setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_200))
-                setTextColor(ContextCompat.getColor(requireContext(), R.color.purple_500))
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 set2.applyTo(profile)
             }
         }
