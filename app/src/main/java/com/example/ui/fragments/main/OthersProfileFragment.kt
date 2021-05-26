@@ -1,6 +1,5 @@
 package com.example.ui.fragments.main
 
-import android.graphics.Color
 import android.os.Bundle
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
@@ -61,12 +60,13 @@ class OthersProfileFragment : ProfileFragment() {
             )
             if (user.isFollowing) {
                 text = requireContext().getString(R.string.unfollow)
-                setBackgroundColor(Color.RED)
-                setTextColor(Color.WHITE)
+                backgroundTintMode = null
+                background = ContextCompat.getDrawable(requireContext(), R.drawable.unfollow_shape)
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 set1.applyTo(profile)
             } else {
                 text = requireContext().getString(R.string.follow)
-                setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_200))
+                background = ContextCompat.getDrawable(requireContext(), R.drawable.follow_shape)
                 setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 set2.applyTo(profile)
             }
