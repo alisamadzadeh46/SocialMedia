@@ -1,5 +1,6 @@
 package com.example.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -35,6 +36,7 @@ class ProfileViewModel @Inject constructor(
             val result = postImpl.profilePosts(uid)
             _posts.postValue(Event(result))
         }
+
     }
 
     fun toggleFollowForUser(uid: String) {

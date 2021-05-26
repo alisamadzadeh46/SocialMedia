@@ -1,6 +1,7 @@
 package com.example.repositories.impl
 
 
+import android.util.Log
 import com.example.data.entities.Post
 import com.example.data.entities.User
 import com.example.repositories.PostsRepository
@@ -26,7 +27,7 @@ class PostsImpl : PostsRepository {
     private val auth = FirebaseAuth.getInstance()
     override suspend fun post() = withContext(Dispatchers.IO) {
         safeCall {
-            val uid = FirebaseAuth.getInstance().uid!!
+            val uid = auth.uid!!
             val follows = user(uid).data!!.follows
             val allPosts = posts.whereIn("authorUid", follows)
                 .orderBy("data", Query.Direction.DESCENDING)
@@ -103,8 +104,12 @@ class PostsImpl : PostsRepository {
                     post.isLiked = uid in post.likedBy
 
                 }
+            Log.i("TGG", uid)
             Resource.Success(profilePost)
+
+
         }
+
     }
 
 
