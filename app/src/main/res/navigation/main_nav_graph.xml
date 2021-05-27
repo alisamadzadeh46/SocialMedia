@@ -30,17 +30,29 @@
         android:name="com.example.ui.fragments.main.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
-    <action android:id="@+id/actionToOthersProfileFragment"
-        app:destination="@+id/othersProfileFragment"/>
+    <action
+        android:id="@+id/actionToOthersProfileFragment"
+        app:destination="@+id/othersProfileFragment" />
     <action
         android:id="@+id/globalActionToCreatePostFragment"
         app:destination="@id/createPostFragment" />
     <fragment
         android:id="@+id/othersProfileFragment"
         android:name="com.example.ui.fragments.main.OthersProfileFragment"
-        android:label="OthersProfileFragment" >
+        android:label="OthersProfileFragment">
         <argument
             android:name="uid"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/commentDialog"
+        android:name="com.example.ui.dialogs.CommentDialog"
+        android:label="CommentDialog" >
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment>
+    <action
+        android:id="@+id/actionToCommentDialog"
+        app:destination="@+id/commentDialog" />
 </navigation>

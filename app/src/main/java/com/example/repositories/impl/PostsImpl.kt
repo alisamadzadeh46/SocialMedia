@@ -25,7 +25,6 @@ class PostsImpl : PostsRepository {
     private val store = FirebaseFirestore.getInstance()
     private val users = store.collection("users")
     private val posts = store.collection("posts")
-    private val comments = store.collection("comments")
     private val storage = Firebase.storage
     private val auth = FirebaseAuth.getInstance()
     override suspend fun post() = withContext(Dispatchers.IO) {
@@ -134,51 +133,5 @@ class PostsImpl : PostsRepository {
 
 
     }
-
-    override suspend fun createComment(commentText: String, postId: String) =
-        withContext(Dispatchers.IO) {
-            safeCall {
-                val uid = auth.uid!!
-                val commentId = UUID.randomUUID().toString()
-                val user = user(uid).data!!
-                val comment = Comment(
-                    commentId,
-                    postId,
-                    uid,
-                    user.username,
-                    user.profilePictureUrl,
-                    commentText
-                )
-                comments.document(commentId).set(comment).await()
-                Resource.Success(comment)
-            }
-        }
-
-
-    override suspend fun deleteComment(comment: Comment) = withContext(Dispatchers.IO) {
-        safeCall {
-            comments.document(comment.commentId).delete().await()
-            Resource.Success(comment)
-        }
-    }
-
-    override suspend fun getCommentForPost(postId: String) = withContext(Dispatchers.IO) {
-        safeCall {
-            val commentForPOST = comments
-                .whereEqualTo("postId", postId)
-                .orderBy("date", Query.Direction.DESCENDING)
-                .get()
-                .await()
-                .toObjects(Comment::class.java)
-                .onEach { comment ->
-                    val user = user(comment.uid!!).data!!
-                    comment.username = user.username
-                    comment.profilePictureUrl = user.profilePictureUrl
-
-                }
-            Resource.Success(commentForPOST)
-        }
-    }
-
 
 }

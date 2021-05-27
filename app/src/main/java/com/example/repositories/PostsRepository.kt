@@ -13,7 +13,5 @@ interface PostsRepository {
     suspend fun users(uid: List<String>): Resource<List<User>>
     suspend fun profilePosts(uid: String): Resource<List<Post>>
     suspend fun toggleFollowForUser(uid: String): Resource<Boolean>
-    suspend fun createComment(commentText:String,postId:String):Resource<Comment>
-    suspend fun deleteComment(comment: Comment):Resource<Comment>
-    suspend fun getCommentForPost(postId: String):Resource<List<Comment>>
+
 }

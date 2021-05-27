@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.entities.Comment
+import com.example.repositories.impl.CommentImpl
 import com.example.repositories.impl.PostsImpl
 import com.example.utils.Event
 import com.example.utils.Resource
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CommentViewModel @Inject constructor(
-    private val postsImpl: PostsImpl,
+    private val commentImpl: CommentImpl,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : ViewModel() {
 
@@ -33,7 +34,7 @@ class CommentViewModel @Inject constructor(
     fun createComment(commentText: String, postId: String) {
         _createCommentStatus.postValue(Event(Resource.Loading()))
         viewModelScope.launch(dispatcher) {
-            val result = postsImpl.createComment(commentText, postId)
+            val result = commentImpl.createComment(commentText, postId)
             _createCommentStatus.postValue(Event(result))
         }
     }
@@ -41,7 +42,7 @@ class CommentViewModel @Inject constructor(
     fun deleteComment(comment: Comment) {
         _deleteCommentStatus.postValue(Event(Resource.Loading()))
         viewModelScope.launch(dispatcher) {
-            val result = postsImpl.deleteComment(comment)
+            val result = commentImpl.deleteComment(comment)
             _deleteCommentStatus.postValue(Event(result))
         }
     }
@@ -49,7 +50,7 @@ class CommentViewModel @Inject constructor(
     fun getCommentsForPost(postId: String) {
         _commentsForPost.postValue(Event(Resource.Loading()))
         viewModelScope.launch(dispatcher) {
-            val result = postsImpl.getCommentForPost(postId)
+            val result = commentImpl.getCommentForPost(postId)
             _commentsForPost.postValue(Event(result))
         }
     }

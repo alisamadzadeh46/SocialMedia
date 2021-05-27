@@ -37,4 +37,6 @@
     <string name="unfollow">Unfollow</string>
     <string name="liked_by_dialog_title">Liked by</string>
     <string name="test_comment_text">test comment text</string>
+    <string name="enter_username">enter username</string>
+    <string name="comment">Comment</string>
 </resources>

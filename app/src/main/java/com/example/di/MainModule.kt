@@ -1,9 +1,7 @@
 package com.example.di
 
-import com.example.repositories.impl.CreatePostImpl
-import com.example.repositories.impl.PostsImpl
-import com.example.repositories.impl.SearchUserImpl
-import com.example.repositories.impl.UsersImpl
+import com.example.repositories.CommentRepository
+import com.example.repositories.impl.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,5 +35,11 @@ object MainModule {
     @ViewModelScoped
     fun provideUserRepository(): UsersImpl {
         return UsersImpl()
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideCommentRepository(): CommentImpl {
+        return CommentImpl()
     }
 }
