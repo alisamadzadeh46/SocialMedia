@@ -109,7 +109,7 @@ dependencies {
 
     // Firebase Auth
     def auth = "21.0.1"
-    implementation 'com.google.firebase:firebase-auth:21.0.1'
+    implementation "com.google.firebase:firebase-auth:$auth"
 
 
     // Android Image Cropper
@@ -118,6 +118,6 @@ dependencies {
 
     // Paging
     def paging = "3.0.0"
-    implementation "androidx.paging:paging-runtime:$paging"
+    implementation "androidx.paging:paging-runtime-ktx:$paging"
 
 }
