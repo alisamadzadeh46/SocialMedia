@@ -17,4 +17,4 @@ Social Media app like instagram
 1. Paging
 
 
-![Alt Text](https://alisamadzadeh.ir/socialmedia/20210528_005203.gif)
+![Output sample](https://github.com/alisamadzadeh46/SocialMedia/blob/main/gif/20210528_005203.gif)
