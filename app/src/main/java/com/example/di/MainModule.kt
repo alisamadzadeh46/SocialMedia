@@ -42,4 +42,10 @@ object MainModule {
     fun provideCommentRepository(): CommentImpl {
         return CommentImpl()
     }
+
+    @Provides
+    @ViewModelScoped
+    fun provideUpdateProfileRepository(): ProfileUpdateImpl {
+        return ProfileUpdateImpl()
+    }
 }

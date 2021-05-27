@@ -39,4 +39,7 @@
     <string name="test_comment_text">test comment text</string>
     <string name="enter_username">enter username</string>
     <string name="comment">Comment</string>
+    <string name="edit_your_profile">edit your profile</string>
+    <string name="update">update</string>
+    <string name="profile_updated">Profile updated</string>
 </resources>
