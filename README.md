@@ -16,4 +16,4 @@ Social Media app like instagram
 1. Android Image Cropper
 1. Paging
 
-![alt text](http://alisamadzadeh.ir/socialmedia/20210528_005203.mp4)
+[![Alt text for your video](http://alisamadzadeh.ir/socialmedia/20210528_005203.mp4](http://alisamadzadeh.ir/socialmedia/20210528_005203.mp4)
