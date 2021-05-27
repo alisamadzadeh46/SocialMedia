@@ -44,14 +44,14 @@
             android:name="uid"
             app:argType="string" />
     </fragment>
-    <fragment
+    <dialog
         android:id="@+id/commentDialog"
         android:name="com.example.ui.dialogs.CommentDialog"
         android:label="CommentDialog" >
         <argument
             android:name="postId"
             app:argType="string" />
-    </fragment>
+    </dialog>
     <action
         android:id="@+id/actionToCommentDialog"
         app:destination="@+id/commentDialog" />
