@@ -1,5 +1,6 @@
 package com.example.repositories
 
+import com.example.data.entities.Comment
 import com.example.data.entities.Post
 import com.example.data.entities.User
 import com.example.utils.Resource
@@ -12,4 +13,6 @@ interface PostsRepository {
     suspend fun users(uid: List<String>): Resource<List<User>>
     suspend fun profilePosts(uid: String): Resource<List<Post>>
     suspend fun toggleFollowForUser(uid: String): Resource<Boolean>
+    suspend fun createComment(commentText:String,postId:String):Resource<Comment>
+    suspend fun deleteComment(comment: Comment):Resource<Comment>
 }

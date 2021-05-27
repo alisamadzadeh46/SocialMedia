@@ -2,6 +2,7 @@ package com.example.repositories.impl
 
 
 import android.util.Log
+import com.example.data.entities.Comment
 import com.example.data.entities.Post
 import com.example.data.entities.User
 import com.example.repositories.PostsRepository
@@ -17,12 +18,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.lang.IllegalStateException
+import java.util.*
 
 @ActivityScoped
 class PostsImpl : PostsRepository {
     private val store = FirebaseFirestore.getInstance()
     private val users = store.collection("users")
     private val posts = store.collection("posts")
+    private val comments = store.collection("comments")
     private val storage = Firebase.storage
     private val auth = FirebaseAuth.getInstance()
     override suspend fun post() = withContext(Dispatchers.IO) {
@@ -131,4 +134,33 @@ class PostsImpl : PostsRepository {
 
 
     }
+
+    override suspend fun createComment(commentText: String, postId: String) =
+        withContext(Dispatchers.IO) {
+            safeCall {
+                val uid = auth.uid!!
+                val commentId = UUID.randomUUID().toString()
+                val user = user(uid).data!!
+                val comment = Comment(
+                    commentId,
+                    postId,
+                    uid,
+                    user.username,
+                    user.profilePictureUrl,
+                    commentText
+                )
+                comments.document(commentId).set(comment).await()
+                Resource.Success(comment)
+            }
+        }
+
+
+    override suspend fun deleteComment(comment: Comment) = withContext(Dispatchers.IO) {
+        safeCall {
+            comments.document(comment.commentId).delete().await()
+            Resource.Success(comment)
+        }
+    }
+
+
 }
