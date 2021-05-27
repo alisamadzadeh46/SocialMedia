@@ -162,5 +162,23 @@ class PostsImpl : PostsRepository {
         }
     }
 
+    override suspend fun getCommentForPost(postId: String) = withContext(Dispatchers.IO) {
+        safeCall {
+            val commentForPOST = comments
+                .whereEqualTo("postId", postId)
+                .orderBy("date", Query.Direction.DESCENDING)
+                .get()
+                .await()
+                .toObjects(Comment::class.java)
+                .onEach { comment ->
+                    val user = user(comment.uid!!).data!!
+                    comment.username = user.username
+                    comment.profilePictureUrl = user.profilePictureUrl
+
+                }
+            Resource.Success(commentForPOST)
+        }
+    }
+
 
 }
