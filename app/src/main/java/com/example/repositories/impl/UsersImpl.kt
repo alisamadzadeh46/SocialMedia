@@ -19,9 +19,14 @@ class UsersImpl : UsersRepository {
     override suspend fun users(uid: List<String>) =
         withContext(Dispatchers.IO) {
             safeCall {
-                val usersList = users.whereIn("uid", uid).orderBy("username").get().await()
-                    .toObjects(User::class.java)
-                Resource.Success(usersList)
+                val chunks = uid.chunked(10)
+                val resultList = mutableListOf<User>()
+                chunks.forEach { _ ->
+                    val usersList = users.whereIn("uid", uid).orderBy("username").get().await()
+                        .toObjects(User::class.java)
+                    resultList.addAll(usersList)
+                }
+                Resource.Success(resultList.toList())
             }
         }
 

@@ -12,14 +12,15 @@ import kotlinx.coroutines.tasks.await
 
 class FollowPostsPagingSource(
     private val db: FirebaseFirestore
-): PagingSource<QuerySnapshot, Post>() {
+) : PagingSource<QuerySnapshot, Post>() {
     private var firstLoad = true
     private lateinit var follows: List<String>
+
 
     override suspend fun load(params: LoadParams<QuerySnapshot>): LoadResult<QuerySnapshot, Post> {
         return try {
             val uid = FirebaseAuth.getInstance().uid!!
-            if(firstLoad) {
+            if (firstLoad) {
                 follows = db.collection("users")
                     .document(uid)
                     .get()
@@ -28,28 +29,38 @@ class FollowPostsPagingSource(
                     ?.follows ?: listOf()
                 firstLoad = false
             }
-            val curPage = params.key ?: db.collection("posts")
-                .whereIn("authorUid", follows)
-                .orderBy("date", Query.Direction.DESCENDING)
-                .get()
-                .await()
+            val chunks = follows.chunked(10)
+            val resultList = mutableListOf<Post>()
+            var curPage = params.key
+            chunks.forEach { chunk ->
+                curPage = params.key ?: db.collection("posts")
+                    .whereIn("authorUid", chunk)
+                    .orderBy("date", Query.Direction.DESCENDING)
+                    .get()
+                    .await()
+                val parsedPage = curPage!!.toObjects(Post::class.java)
+                    .onEach { post ->
+                        val user = db.collection("users")
+                            .document(post.authorUid).get().await().toObject(User::class.java)!!
+                        post.authorProfilePictureUrl = user.profilePictureUrl
+                        post.authorUsername = user.username
+                        post.isLiked = uid in post.likedBy
+                    }
+                resultList.addAll(parsedPage)
+            }
 
-            val lastDocumentSnapshot = curPage.documents[curPage.size() - 1]
+
+            val lastDocumentSnapshot = curPage!!.documents[curPage!!.size() - 1]
 
             val nextPage = db.collection("posts")
-                .whereIn("authorUid", follows)
+                .whereIn("authorUid", if (chunks.isNotEmpty()) chunks[0] else listOf())
                 .orderBy("date", Query.Direction.DESCENDING)
                 .startAfter(lastDocumentSnapshot)
                 .get()
                 .await()
 
             LoadResult.Page(
-                curPage.toObjects(Post::class.java).onEach { post ->
-                    val user = db.collection("users").document(uid).get().await().toObject(User::class.java)!!
-                    post.authorProfilePictureUrl = user.profilePictureUrl
-                    post.authorUsername = user.username
-                    post.isLiked = uid in post.likedBy
-                },
+                resultList,
                 null,
                 nextPage
             )
