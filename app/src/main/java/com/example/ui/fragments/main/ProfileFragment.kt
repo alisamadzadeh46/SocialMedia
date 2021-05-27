@@ -6,6 +6,8 @@ import android.view.View
 import android.widget.ProgressBar
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.socialmedia.R
 import com.example.ui.fragments.BasePostFragment
@@ -16,12 +18,14 @@ import com.example.viewmodel.ProfileViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 open class ProfileFragment : BasePostFragment(R.layout.fragment_profile) {
 
-    override val postProgressBar: ProgressBar
-        get() = profilePostsProgressBar
+
     override val basePostViewModel: BasePostViewModel
         get() {
             val vm: ProfileViewModel by viewModels()
@@ -40,7 +44,21 @@ open class ProfileFragment : BasePostFragment(R.layout.fragment_profile) {
 
         follow.isVisible = false
         viewModel.loadProfile(uid)
+
+        lifecycleScope.launch {
+            viewModel.getPagingFlow(uid).collect {
+                postAdapter.submitData(it)
+            }
+        }
+
+        lifecycleScope.launch {
+            postAdapter.loadStateFlow.collectLatest {
+                profilePostsProgressBar?.isVisible = it.refresh is LoadState.Loading ||
+                        it.append is LoadState.Loading
+            }
+        }
     }
+
     private fun RecyclerView() = RecyclerViewPost.apply {
         adapter = postAdapter
         itemAnimator = null
@@ -57,10 +75,15 @@ open class ProfileFragment : BasePostFragment(R.layout.fragment_profile) {
         ) { user ->
             ProgressBar.isVisible = false
             username.text = user.username
-            description.text = if(user.description.isEmpty()) {
+            description.text = if (user.description.isEmpty()) {
                 requireContext().getString(R.string.no_description)
             } else user.description
             glide.load(user.profilePictureUrl).into(profile_image)
+        })
+        basePostViewModel.deletePostStatus.observe(viewLifecycleOwner, EventObserver(
+            onError = { snackBar(it) }
+        ) {
+            postAdapter.refresh()
         })
     }
 }

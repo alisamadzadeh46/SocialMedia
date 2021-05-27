@@ -1,18 +1,25 @@
 package com.example.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.data.entities.Post
 import com.example.data.entities.User
+import com.example.data.pagingsource.ProfilePostsPagingSource
 import com.example.repositories.impl.PostsImpl
+import com.example.utils.Constants.PAGE_SIZE
 import com.example.utils.Event
 import com.example.utils.Resource
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,17 +33,16 @@ class ProfileViewModel @Inject constructor(
     private val _followStatus = MutableLiveData<Event<Resource<Boolean>>>()
     val followStatus: LiveData<Event<Resource<Boolean>>> = _followStatus
 
-    private val _posts = MutableLiveData<Event<Resource<List<Post>>>>()
-    override val posts: LiveData<Event<Resource<List<Post>>>>
-        get() = _posts
 
-    override fun getPosts(uid: String) {
-        _posts.postValue(Event(Resource.Loading()))
-        viewModelScope.launch(dispatcher) {
-            val result = postImpl.profilePosts(uid)
-            _posts.postValue(Event(result))
-        }
 
+    fun getPagingFlow(uid: String): Flow<PagingData<Post>> {
+        val pagingSource = ProfilePostsPagingSource(
+            FirebaseFirestore.getInstance(),
+            uid
+        )
+        return Pager(PagingConfig(PAGE_SIZE)) {
+            pagingSource
+        }.flow.cachedIn(viewModelScope)
     }
 
     fun toggleFollowForUser(uid: String) {
@@ -53,6 +59,5 @@ class ProfileViewModel @Inject constructor(
             val result = postImpl.user(uid)
             _profileMeta.postValue(Event(result))
         }
-        getPosts(uid)
     }
 }

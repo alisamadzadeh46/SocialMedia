@@ -27,7 +27,6 @@ abstract class BasePostFragment(
 
     @Inject
     lateinit var postAdapter: PostAdapter
-    protected abstract val postProgressBar: ProgressBar
     protected abstract val basePostViewModel: BasePostViewModel
     private var currentLikedIndex: Int? = null
 
@@ -61,6 +60,35 @@ abstract class BasePostFragment(
     }
 
     private fun subscribeToObservers() {
+        basePostViewModel.likePostStatus.observe(viewLifecycleOwner, EventObserver(
+            onError = {
+                currentLikedIndex?.let { index ->
+                    postAdapter.peek(index)?.isLiking = false
+                    postAdapter.notifyItemChanged(index)
+                }
+                snackBar(it)
+            },
+            onLoading = {
+                currentLikedIndex?.let { index ->
+                    postAdapter.peek(index)?.isLiking = true
+                    postAdapter.notifyItemChanged(index)
+                }
+            }
+        ) { isLiked ->
+            currentLikedIndex?.let { index ->
+                val uid = FirebaseAuth.getInstance().uid!!
+                postAdapter.peek(index)?.apply {
+                    this.isLiked = isLiked
+                    isLiking = false
+                    if(isLiked) {
+                        likedBy += uid
+                    } else {
+                        likedBy -= uid
+                    }
+                }
+                postAdapter.notifyItemChanged(index)
+            }
+        })
         basePostViewModel.likedByUsers.observe(viewLifecycleOwner, EventObserver(
             onError = { snackBar(it) }
         ) { users ->
@@ -68,64 +96,6 @@ abstract class BasePostFragment(
             searchAdapter.users = users
             LikedByDialog(searchAdapter).show(childFragmentManager, null)
         })
-        basePostViewModel.deletePostStatus.observe(viewLifecycleOwner, EventObserver(
-            onError = { snackBar(it) }
-        ) { deletedPost ->
-            postAdapter.posts -= deletedPost
-        })
-        basePostViewModel.posts.observe(viewLifecycleOwner, EventObserver(
-            onError = {
-                postProgressBar.isVisible = false
-                snackBar(it)
-            },
-            onLoading = {
-                postProgressBar.isVisible = true
-            }
-        ) { posts ->
-            postProgressBar.isVisible = false
-            postAdapter.posts = posts
-        })
-        basePostViewModel.likePostStatus.observe(viewLifecycleOwner, EventObserver(
-            onError = {
-                currentLikedIndex?.let { index ->
-                    postAdapter.posts[index].isLiking = false
-                    postAdapter.notifyItemChanged(index)
-                }
-                snackBar(it)
-            },
-            onLoading = {
-                currentLikedIndex?.let {
-                    postAdapter.posts[it].isLiking = true
-                    postAdapter.notifyItemChanged(it)
-                }
-            }
-        ) { isLiked ->
-            currentLikedIndex?.let {
-                val uid = FirebaseAuth.getInstance().uid!!
-                postAdapter.posts[it].apply {
-                    this.isLiked = isLiked
-                    isLiking = false
-                    if (isLiked) {
-                        likedBy += uid
-                    } else {
-                        likedBy -= uid
-                    }
-                }
-                postAdapter.notifyItemChanged(it)
-            }
-        })
 
-        basePostViewModel.posts.observe(viewLifecycleOwner, EventObserver(
-            onError = {
-                postProgressBar.isVisible = false
-                snackBar(it)
-            },
-            onLoading = {
-                postProgressBar.isVisible = true
-            }
-        ) { posts ->
-            postProgressBar.isVisible = false
-            postAdapter.posts = posts
-        })
     }
 }

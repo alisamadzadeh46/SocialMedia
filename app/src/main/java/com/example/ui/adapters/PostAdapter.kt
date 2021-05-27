@@ -1,12 +1,10 @@
 package com.example.ui.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
@@ -18,7 +16,7 @@ import javax.inject.Inject
 
 class PostAdapter @Inject constructor(
     private val glide: RequestManager
-) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+) : PagingDataAdapter<Post, PostAdapter.PostViewHolder>(Companion) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         return PostViewHolder(
@@ -31,7 +29,7 @@ class PostAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        val post = posts[position]
+        val post = getItem(position) ?: return
         holder.bind(
             post,
             glide,
@@ -42,10 +40,6 @@ class PostAdapter @Inject constructor(
             onLikedByClickListener
         )
 
-    }
-
-    override fun getItemCount(): Int {
-        return posts.size
     }
 
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -114,7 +108,7 @@ class PostAdapter @Inject constructor(
     }
 
 
-    private val diffCallback = object : DiffUtil.ItemCallback<Post>() {
+    companion object : DiffUtil.ItemCallback<Post>() {
         override fun areContentsTheSame(oldItem: Post, newItem: Post): Boolean {
             return oldItem.hashCode() == newItem.hashCode()
         }
@@ -123,11 +117,6 @@ class PostAdapter @Inject constructor(
             return oldItem.id == newItem.id
         }
     }
-    private val differ = AsyncListDiffer(this, diffCallback)
-
-    var posts: List<Post>
-        get() = differ.currentList
-        set(value) = differ.submitList(value)
 
     private var onLikeClickListener: ((Post, Int) -> Unit)? = null
     private var onUserClickListener: ((String) -> Unit)? = null
