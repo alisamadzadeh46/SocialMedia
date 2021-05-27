@@ -88,8 +88,9 @@ class PostsImpl : PostsRepository {
 
     override suspend fun users(uid: List<String>) = withContext(Dispatchers.IO) {
         safeCall {
-            val usersList = users.whereIn("uid", uid).orderBy("username").get().await()
+            val usersList = users.whereIn("udi", uid).orderBy("username").get().await()
                 .toObjects(User::class.java)
+            Log.i("uid", usersList.toString())
             Resource.Success(usersList)
         }
     }
